@@ -1,15 +1,26 @@
 package eecs2011.assignment1.banking;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.*;
 
-public class AccountActivityLog {
+/**
+ * 
+ * @author Daniel, Brian
+ *
+ */
+public class AccountLog {
 	
 	private List<AccountActivity> activityRecords = new ArrayList<AccountActivity>();
 		
-	public AccountActivityLog(List<AccountActivity> activityRecords) {
+	public AccountLog(List<AccountActivity> activityRecords) {
 	    this.activityRecords = activityRecords;
 	}
     
-	public AccountActivityLog() {
+	public AccountLog() {
 	    this(new ArrayList<AccountActivity>());
 	}
 
@@ -25,7 +36,7 @@ public class AccountActivityLog {
 		return activityRecords.get(index);
 	}
 	
-	public void sort() {
+	public void sortAccountLog() {
 	    // create a new list to store the sorted records
 		List<AccountActivity> sortedRecords = new ArrayList<AccountActivity>();
 		int size = activityRecords.size();
@@ -63,4 +74,17 @@ public class AccountActivityLog {
 	    return activityRecords;
 	}
 	
+	public void saveAccountLog(String accountLogFile) throws IOException{
+		FileOutputStream output = new FileOutputStream(accountLogFile);
+		ObjectOutputStream stream = new ObjectOutputStream(output);
+		stream.writeObject(activityRecords);
+		stream.close();
+	}
+	
+	public void loadAccountLog(String accountLogFile) throws IOException, ClassNotFoundException{
+		FileInputStream input = new FileInputStream(accountLogFile);
+		ObjectInputStream stream = new ObjectInputStream(input);
+		List<AccountActivity>activityRecords = (ArrayList<AccountActivity>) stream.readObject();
+		stream.close();
+	}
 }

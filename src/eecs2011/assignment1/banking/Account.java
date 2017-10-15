@@ -1,5 +1,10 @@
 package eecs2011.assignment1.banking;
 
+/**
+ * The abstract class of all types of accounts.
+ * @author daniel
+ *
+ */
 public abstract class Account {
 
     protected String accountSIN;
@@ -8,12 +13,14 @@ public abstract class Account {
     protected boolean suspended;
     protected boolean cancelled;
     
+    
     public Account(String accountSIN) {
         this.accountSIN = accountSIN;
         this.balance = 0;
         this.suspended = false;
         this.cancelled = false;
     }
+    
     
     public abstract void withdrawAmount(double amount);
     

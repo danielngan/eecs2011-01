@@ -15,7 +15,7 @@ public class Banking {
 
     private Map<String, CheckingAccount> checkingAccounts = new HashMap<String, CheckingAccount>();
     private Map<String, CreditAccount> creditAccounts = new HashMap<String, CreditAccount>();
-    private AccountActivityLog accountActivityLog = new AccountActivityLog();
+    private AccountLog accountActivityLog = new AccountLog();
     
     private CheckingAccount getCheckingAccount(String accountSIN) {
         CheckingAccount account = checkingAccounts.get(accountSIN);
@@ -33,7 +33,7 @@ public class Banking {
         return creditAccounts;
     }
 
-    public AccountActivityLog getAccountActivityLog() {
+    public AccountLog getAccountActivityLog() {
         return accountActivityLog;
     }
 
@@ -236,7 +236,7 @@ public class Banking {
     }
     
     public void sortAccountLog() {
-        accountActivityLog.sort();
+        accountActivityLog.sortAccountLog();
     }
     
     public void processAccountLogEndOfDay() {
@@ -263,7 +263,7 @@ public class Banking {
         XMLDecoder decoder = new XMLDecoder(new FileInputStream(fileName));
         try {
             List<AccountActivity> records = (List<AccountActivity>)decoder.readObject();
-            accountActivityLog = new AccountActivityLog(records);
+            accountActivityLog = new AccountLog(records);
         } finally {
             decoder.close();
         }
