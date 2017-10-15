@@ -38,7 +38,17 @@ public class TestAccountLog {
             System.out.println(accountLog.getRecord(i));
         }
         
-        banking.saveAccountLog(System.out);
+        banking.saveAccountLog("account-log.xml");
+        
+        Banking banking2 = new Banking();
+        
+        banking2.retrieveAccountLog("account-log.xml");
+        
+        for (AccountActivity record : banking2.getAccountActivityLog().getActivityRecords()) {
+            System.out.println(record);
+        }
+        
+        
     }
 
 }

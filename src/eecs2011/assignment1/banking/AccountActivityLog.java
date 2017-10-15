@@ -5,9 +5,14 @@ public class AccountActivityLog {
 	
 	private List<AccountActivity> activityRecords = new ArrayList<AccountActivity>();
 		
-	public AccountActivityLog() {
+	public AccountActivityLog(List<AccountActivity> activityRecords) {
+	    this.activityRecords = activityRecords;
 	}
-	
+    
+	public AccountActivityLog() {
+	    this(new ArrayList<AccountActivity>());
+	}
+
 	public void addRecord(AccountActivity record) {
 		activityRecords.add(record);
 	}

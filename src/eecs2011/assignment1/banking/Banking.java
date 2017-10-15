@@ -1,11 +1,14 @@
 package eecs2011.assignment1.banking;
 
+import java.beans.XMLDecoder;
 import java.beans.XMLEncoder;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class Banking {
@@ -257,6 +260,13 @@ public class Banking {
     }
     
     public void retrieveAccountLog(String fileName) throws IOException {
+        XMLDecoder decoder = new XMLDecoder(new FileInputStream(fileName));
+        try {
+            List<AccountActivity> records = (List<AccountActivity>)decoder.readObject();
+            accountActivityLog = new AccountActivityLog(records);
+        } finally {
+            decoder.close();
+        }
     }
  
 }
