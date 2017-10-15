@@ -1,5 +1,9 @@
 package eecs2011.assignment1.banking;
 
+import java.beans.XMLEncoder;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -16,6 +20,18 @@ public class Banking {
             throw new IllegalArgumentException("No such Checking Account for SIN = " + accountSIN);
         }
         return account;
+    }
+
+    public Map<String, CheckingAccount> getCheckingAccounts() {
+        return checkingAccounts;
+    }
+
+    public Map<String, CreditAccount> getCreditAccounts() {
+        return creditAccounts;
+    }
+
+    public AccountActivityLog getAccountActivityLog() {
+        return accountActivityLog;
     }
 
     private CreditAccount getCreditAccount(String accountSIN) {
@@ -206,6 +222,7 @@ public class Banking {
         record.setTransferAccountSIN(fromAccountSIN);
         accountActivityLog.addRecord(record);
     }
+    
 
     public void transferAmount(Account fromAccount, Account toAccount, double amount) {
         ensureAccountNotSuspendedOrCancelled(fromAccount);
@@ -220,19 +237,26 @@ public class Banking {
     }
     
     public void processAccountLogEndOfDay() {
-        accountActivityLog.processEndOfDay();
     }
     
     public void processAccountLogEndOfMonth() {
-        accountActivityLog.processEndOfMonth();
     }
     
-    public void saveAccountLog(String fileName) {
-        accountActivityLog.saveToFile(fileName);
+    public void saveAccountLog(String fileName) throws IOException {
+        saveAccountLog(new FileOutputStream(fileName));
     }
     
-    public void retrieveAccountLog(String fileName) {
-        accountActivityLog.retrieveFromFile(fileName);
+    public void saveAccountLog(OutputStream out) throws IOException {
+        XMLEncoder encoder = new XMLEncoder(out, "UTF-8", true, 0);
+        try {
+            encoder.writeObject(accountActivityLog.getActivityRecords());
+            encoder.flush();
+        } finally {
+            encoder.close();
+        }
+    }
+    
+    public void retrieveAccountLog(String fileName) throws IOException {
     }
  
 }

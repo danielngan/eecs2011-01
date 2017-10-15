@@ -54,21 +54,8 @@ public class AccountActivityLog {
 		this.activityRecords = sortedRecords;
 	}
 	
-	public void processEndOfDay() {
-	    
-	    
-	}
-	
-	public void processEndOfMonth() {
-	    
-	}
-	
-	public void saveToFile(String fileName) {
-	    
-	}
-	
-	public void retrieveFromFile(String fileName) {
-	    
+	public List<AccountActivity> getActivityRecords() {
+	    return activityRecords;
 	}
 	
 }

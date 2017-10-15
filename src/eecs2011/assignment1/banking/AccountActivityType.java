@@ -1,6 +1,8 @@
 package eecs2011.assignment1.banking;
 
-public enum AccountActivityType {
+import java.io.Serializable;
+
+public enum AccountActivityType implements Serializable {
     
     WITHDRAW_AMOUNT,
     DEPOSIT_AMOUNT,

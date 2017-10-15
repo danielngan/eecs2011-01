@@ -1,8 +1,9 @@
 package eecs2011.assignment1.banking;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class AccountActivity {
+public class AccountActivity implements Serializable {
 
     private String accountSIN;
     private Date activityDateTime;

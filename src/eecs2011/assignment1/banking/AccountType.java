@@ -1,6 +1,8 @@
 package eecs2011.assignment1.banking;
 
-public enum AccountType {
+import java.io.Serializable;
+
+public enum AccountType implements Serializable {
 
     CHECKING,
     CREDIT,
