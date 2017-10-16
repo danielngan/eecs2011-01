@@ -24,15 +24,32 @@ public class Banking {
         }
         return account;
     }
-
+    /**
+     * @precondition CheckingAccounts are not null.
+     * Get the checking accounts as a map/
+     * @return checking accounts
+     * @postcondition the checking accounts are returned.
+     */
     public Map<String, CheckingAccount> getCheckingAccounts() {
         return checkingAccounts;
     }
-
+    
+    /**
+     * @precondition CreditAccounts is not null.
+     * Get the credit accounts as a map/
+     * @return credit accounts
+     * @postcondition the credit accounts are returned.
+     */
     public Map<String, CreditAccount> getCreditAccounts() {
         return creditAccounts;
     }
-
+    
+    /**
+     * @precondition ActivityLog is not null.
+     * Get the account activity.
+     * @return accountActivityLog
+     * @postcondition the account activity log is returned.
+     */
     public AccountLog getAccountActivityLog() {
         return accountActivityLog;
     }
@@ -87,7 +104,13 @@ public class Banking {
         ensureAccountNotCancelled(account);
         
     }
-
+    
+    /**
+     * @precondition the amount is not negative
+     * withdraw a certain amount from a account
+     * @param amount, accountSIN, accountType
+     * @postcondition An amount of money is withdrawn from the account.
+     */
     public void withdrawAmount(AccountType accountType, String accountSIN, double amount) {
         Account account = getAccount(accountType, accountSIN);
         account.withdrawAmount(amount);
@@ -97,7 +120,12 @@ public class Banking {
         record.setCurrentOutstandingCharge(account.getOutstandingCharge());
         accountActivityLog.addRecord(record);
     }
-
+    /**
+     * @precondition overdraftOption is not null
+     * Set the overdraft option
+     * @param overdraftOption, accountSIN
+     * @postcondition the overdraft option is set
+     */
     public void setOverdraftOption(String accountSIN, OverdraftProtection overdraftOption) {
         CheckingAccount account = getCheckingAccount(accountSIN);
         account.setOverdraftOption(overdraftOption);
@@ -108,6 +136,13 @@ public class Banking {
         accountActivityLog.addRecord(record);
     }
 
+    /**
+     * deposit a certain amount of money into the account.
+     * @precondition the account is not suspended
+     * @precondition the amount is not negative
+     * @postcondition the current balance is now equal to the original balance plus the deposit amount
+     * @param amount, accountSIN, accountType
+     */
     public void depositAmount(AccountType accountType, String accountSIN, double amount) {
         Account account = getAccount(accountType, accountSIN);
         ensureAccountNotSuspendedOrCancelled(account);
@@ -118,13 +153,21 @@ public class Banking {
         record.setCurrentOutstandingCharge(account.getOutstandingCharge());
         accountActivityLog.addRecord(record);
     }
-
+    
+    /**
+	 * @precondition accountSIN and overdraftProtection is not null.
+	 * Create a checking account.
+	 * @param accountSIN, overdraftProtection
+	 * @param overdraftProtection
+	 * @return the new created account.
+	 * @postcondition A new checking account is created.
+	 */
     public CheckingAccount createCheckingAccount(String accountSIN, OverdraftProtection overdraftProtection) { //call by Checking_account name = Checking_account.createAccount(x,x);
         ensureValidAccountSIN(accountSIN);
         if (checkingAccounts.containsKey(accountSIN)) {
             throw new IllegalStateException("Checking account already exists for SIN: " + accountSIN);
         }
-        CheckingAccount account = new CheckingAccount(accountSIN, overdraftProtection);
+        CheckingAccount account = CheckingAccount.createAccount(accountSIN, overdraftProtection);
         checkingAccounts.put(accountSIN, account);
         AccountActivity record = new AccountActivity(accountSIN, new Date(), AccountActivityType.CREATE_ACCOUNT, AccountType.CHECKING);
         record.setCurrentBalance(account.getBalance());
@@ -132,39 +175,67 @@ public class Banking {
         accountActivityLog.addRecord(record);
         return account;
     }
-
+    
+    /**
+     * @precondition accountSIN is not null.
+     * @param accountSIN
+     * create a credit account.
+     * @return the new created credit account.
+     * @postcondition a new credit account is created.
+     */
     public CreditAccount createCreditAccount(String accountSIN) { //call by Checking_account name = Checking_account.createAccount(x,x);
         ensureValidAccountSIN(accountSIN);
         if (creditAccounts.containsKey(accountSIN)) {
             throw new IllegalStateException("Credit account already exists for SIN: " + accountSIN);
         }
-        CreditAccount account = new CreditAccount(accountSIN);
-        creditAccounts.put(accountSIN, account);
+        CreditAccount account = CreditAccount.createAccount(accountSIN);
+        creditAccounts.put(accountSIN, CreditAccount.createAccount(accountSIN));
         AccountActivity record = new AccountActivity(accountSIN, new Date(), AccountActivityType.CREATE_ACCOUNT, AccountType.CREDIT);
         record.setCurrentBalance(account.getBalance());
         record.setCurrentOutstandingCharge(account.getOutstandingCharge());
         accountActivityLog.addRecord(record);
         return account;
     }
-
+    
+    
+    /**
+     * @precondition the account exists
+     * to cancel a bank account
+     * @param accountType, accountSIN
+     * @postcondition the account is cancelled.
+     */
     public void cancelAccount(AccountType accountType, String accountSIN) {
         Account account = getAccount(accountType, accountSIN);
-        account.cancel();
+        account.cancelAccount();
         AccountActivity record = new AccountActivity(accountSIN, new Date(), AccountActivityType.CANCEL_ACCOUNT, accountType);
         record.setCurrentBalance(account.getBalance());
         record.setCurrentOutstandingCharge(account.getOutstandingCharge());
         accountActivityLog.addRecord(record);
     }
-
+    
+    
+    /**
+     * @precondition the account exists
+     * to suspend a bank account
+     * @param accountType, accountSIN
+     * @postcondition the account is suspended.
+     */
     public void suspendAccount(AccountType accountType, String accountSIN) {
         Account account = getAccount(accountType, accountSIN);
-        account.suspend();
+        account.suspendAccount();
         AccountActivity record = new AccountActivity(accountSIN, new Date(), AccountActivityType.SUSPEND_ACCOUNT, accountType);
         record.setCurrentBalance(account.getBalance());
         record.setCurrentOutstandingCharge(account.getOutstandingCharge());
         accountActivityLog.addRecord(record);
     }
-
+    
+    /**
+     * @precondition the current balance of the account is not negative.
+     * Return the current balance of an account
+     * @param accountType, accountSIN
+     * @return the current balance of a account.
+     * @postcondition the current balance of the account is returned.
+     */
     public double getBalance(AccountType accountType, String accountSIN) {
         Account account = getAccount(accountType, accountSIN);
         ensureAccountNotSuspendedOrCancelled(account);
@@ -175,6 +246,13 @@ public class Banking {
         return account.getBalance();
     }
     
+    /**
+     * @precondition the limit is not negative
+     * Set the Overdraft Limit Amount of a specified checking account to a specified
+		amount; or set the Credit Limit of a specified credit account to a specified amount
+     * @param accountType, accountSIN, limit
+     * @postcondition the overdraft limit/credit limit of a checking account/credit account is set.
+     */
     public void setLimit(AccountType accountType, String accountSIN, double limit) {
         Account account = getAccount(accountType, accountSIN);
         ensureAccountNotSuspendedOrCancelled(account);
@@ -185,7 +263,13 @@ public class Banking {
         record.setCurrentOutstandingCharge(account.getOutstandingCharge());
         accountActivityLog.addRecord(record);
     }
-
+    
+    /**
+     * @precondition the account exists
+     * to terminate a bank account
+     * @param accountType, accountSIN
+     * @postcondition the account is terminated.
+     */
     public void terminateAccount(AccountType accountType, String accountSIN) {
         Account account = getAccount(accountType, accountSIN);
         double balance = account.getBalance();
@@ -203,6 +287,12 @@ public class Banking {
         accountActivityLog.addRecord(record);
     }
     
+    /**
+     * @precondition transfer amount is not null.
+     * transfer amount 
+     * @param fromAccountType, fromAccountSIN, toAccountType, toAccountSIN, amount
+     * @postcondition Amount is transferred
+     */
     public void transferAmount(AccountType fromAccountType, String fromAccountSIN, AccountType toAccountType, String toAccountSIN, double amount) {
         Account fromAccount = getAccount(fromAccountType, fromAccountSIN);
         Account toAccount = getAccount(toAccountType, toAccountSIN);

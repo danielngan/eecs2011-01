@@ -20,6 +20,10 @@ import eecs2011.assignment1.banking.AccountLog;
 public class TestAccountLog {
 
     @Test
+    /**
+     * Test the sort account log function.
+     * @throws IOException
+     */
     public void testSortAccountLog() throws IOException {
         Banking banking = new Banking();
         AccountLog accountLog = banking.getAccountActivityLog();

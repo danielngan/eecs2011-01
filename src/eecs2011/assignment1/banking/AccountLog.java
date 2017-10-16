@@ -9,7 +9,7 @@ import java.util.*;
 
 /**
  * 
- * @author Daniel, Brian
+ * @author Yi Ngan, Brian Wong
  *
  */
 public class AccountLog {
@@ -23,21 +23,44 @@ public class AccountLog {
 	public AccountLog() {
 	    this(new ArrayList<AccountActivity>());
 	}
-
+	
+	/**
+	 * @precondition AccountActivity is not null.
+	 * Add a record of account activity in the ArrayList activityRecords.
+	 * @param record
+	 * @postcondition the record of is added to activityRecords.
+	 */
 	public void addRecord(AccountActivity record) {
 		activityRecords.add(record);
 	}
 	
+	/**
+	 * @precondition the number of records in activityRecords is not null.
+	 * Get the current number of activity records.
+	 * @return the number of account activity records.
+	 * @postcondition the number of account activity records is returned.
+	 */
 	public int getNumberOfRecords() {
 		return activityRecords.size();
 	}
 	
+	/**
+	 * @precondition activityRecords is not empty
+	 * @param index
+	 * Get a certain account activity record
+	 * @return the activity Record
+	 * @postcondition the activity record is accessed and returned by the index method in ArrayList.
+	 */
 	public AccountActivity getRecord(int index) {
 		return activityRecords.get(index);
 	}
 	
+	/**
+	 * @precondition activityRecords is not empty
+	 * Sort the records in activityRecords by Insertion sort and store the result in a new ArrayList
+	 * @postcondition a new ArrayList is created with the records sorted.
+	 */
 	public void sortAccountLog() {
-	    // create a new list to store the sorted records
 		List<AccountActivity> sortedRecords = new ArrayList<AccountActivity>();
 		int size = activityRecords.size();
 		// insertion sort to insert records from the original list to the
@@ -70,10 +93,23 @@ public class AccountLog {
 		this.activityRecords = sortedRecords;
 	}
 	
+	/**
+	 * @precondition activityRecords is not empty
+	 * Get the activity records.
+	 * @return activity records
+	 * @postcondition the activity records are returned.
+	 */
 	public List<AccountActivity> getActivityRecords() {
 	    return activityRecords;
 	}
 	
+	/**
+	 * @precondition ??
+	 * Save the account log into a file.
+	 * @param accountLogFile
+	 * @throws IOException
+	 * @postcondition the account log is saved to a file.
+	 */
 	public void saveAccountLog(String accountLogFile) throws IOException{
 		FileOutputStream output = new FileOutputStream(accountLogFile);
 		ObjectOutputStream stream = new ObjectOutputStream(output);
@@ -81,6 +117,14 @@ public class AccountLog {
 		stream.close();
 	}
 	
+	/**
+	 * 
+	 * @param accountLogFile
+	 * @throws IOException
+	 * @throws ClassNotFoundException
+	 * Load the account log file.
+	 * @postcondition the account log file is loaded.
+	 */
 	public void loadAccountLog(String accountLogFile) throws IOException, ClassNotFoundException{
 		FileInputStream input = new FileInputStream(accountLogFile);
 		ObjectInputStream stream = new ObjectInputStream(input);

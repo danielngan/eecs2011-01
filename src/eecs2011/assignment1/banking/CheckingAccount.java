@@ -9,12 +9,28 @@ public class CheckingAccount extends Account {
 	private OverdraftProtection overdraftOption;
 	private double overdraftCharge;
 
-	public CheckingAccount(String accountSIN, OverdraftProtection overdraftProtection) {
+	private CheckingAccount(String accountSIN, OverdraftProtection overdraftProtection) {
 	    super(accountSIN);
+	    this.suspended = suspended;
+	    this.cancelled = cancelled;
 	}
-
+	
+	/**
+	 * @precondition accountSIN and overdraftProtection is not null.
+	 * Create a checking account.
+	 * @param accountSIN
+	 * @param overdraftProtection
+	 * @return the new created account.
+	 * @postcondition A new checking account is created.
+	 */
+	public static CheckingAccount createAccount(String accountSIN, OverdraftProtection overdraftProtection) {
+		CheckingAccount newAccount = new CheckingAccount(accountSIN, overdraftProtection);
+		return newAccount;
+	}
+	
+	
 	@Override
-    public void withdrawAmount(double amount) {
+	public void withdrawAmount(double amount) {
         if (amount > this.balance) {
             switch (overdraftOption) {
             case NONE:
